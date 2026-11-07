@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}گردش کارها{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>گردش کارها</h1>
+    <p>گردش کار یک قانون است که شما آن را کنترل می‌کنید. برای مثال، گردش کار
+       <b>انتخاب واحد (Course Selection)</b> تعیین می‌کند که دانشجویان بتوانند
+       درس انتخاب کنند یا خیر.</p>
+
+    <div class="table-wrap">
+    <table>
+        <tr><th>نام</th><th>توضیحات</th><th>وضعیت</th><th>عملیات</th></tr>
+        {% for wf in workflows %}
+        <tr>
+            <td>{{ wf.name }}</td>
+            <td>{{ wf.description }}</td>
+            <td>
+                {% if wf.is_active %}<span class="badge on">فعال</span>
+                {% else %}<span class="badge off">بسته</span>{% endif %}
+            </td>
+            <td>
+                <form method="post" action="{% url 'toggle_workflow' wf.id %}" style="margin:0;">
+                    {% csrf_token %}
+                    <button class="btn" type="submit">{% if wf.is_active %}بستن{% else %}فعال‌سازی{% endif %}</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">هنوز گردش کاری تعریف نشده است.</td></tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+
+<div class="card">
+    <h2>تعریف گردش کار جدید</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-green">ذخیره گردش کار</button>
+    </form>
+</div>
+{% endblock %}

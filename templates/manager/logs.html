@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}لاگ فعالیت‌ها{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>لاگ فعالیت‌ها</h1>
+    <p>۱۰۰ فعالیت آخری که داده‌ای را در سامانه تغییر داده‌اند.</p>
+
+    <div class="table-wrap">
+    <table>
+        <tr><th>زمان</th><th>کاربر</th><th>فعالیت</th></tr>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.created_at|date:"Y-m-d H:i" }}</td>
+            <td>{% if log.user %}{{ log.user.username }}{% else %}-{% endif %}</td>
+            <td>{{ log.action }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">هنوز لاگی ثبت نشده است.</td></tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+{% endblock %}

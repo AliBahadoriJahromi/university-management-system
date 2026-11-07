@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h1>خوش آمدید، {{ user.get_full_name|default:user.username }}</h1>
+    <p>حساب شما داشبورد اختصاصی ندارد. اگر مدیر سامانه (ادمین) هستید،
+       از <a href="/admin/">پنل مدیریت</a> استفاده کنید.</p>
+</div>
+{% endblock %}

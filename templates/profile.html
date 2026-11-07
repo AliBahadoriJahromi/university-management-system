@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}پروفایل من{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>پروفایل من</h1>
+    {% if error %}
+    <div class="message error">{{ error }}</div>
+    {% endif %}
+    <p>نام کاربری: <b>{{ user.username }}</b></p>
+    <p>نقش: <b>{{ user.get_role_display }}</b></p>
+    {% if user.student_number %}
+    <p>شماره دانشجویی: <b>{{ user.student_number }}</b></p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>تغییر نام</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="update_name">
+        <label>نام</label>
+        <input type="text" name="first_name" value="{{ user.first_name }}">
+        <label>نام خانوادگی</label>
+        <input type="text" name="last_name" value="{{ user.last_name }}">
+        <button type="submit" class="btn btn-green">ذخیره نام</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>تغییر رمز عبور</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="change_password">
+        <label>رمز عبور فعلی</label>
+        <input type="password" name="old_password">
+        <label>رمز عبور جدید</label>
+        <input type="password" name="new_password1">
+        <label>تکرار رمز عبور جدید</label>
+        <input type="password" name="new_password2">
+        <button type="submit" class="btn">تغییر رمز عبور</button>
+    </form>
+</div>
+{% endblock %}

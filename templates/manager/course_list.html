@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}همه دروس{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>همه دروس</h1>
+
+    <form method="get" style="display:flex; gap:10px; max-width:500px;">
+        <input type="text" name="q" placeholder="جستجو بر اساس کد یا عنوان..." value="{{ query }}">
+        <button type="submit" class="btn">جستجو</button>
+    </form>
+
+    <div class="table-wrap">
+    <table>
+        <tr>
+            <th>کد</th><th>عنوان</th><th>واحد</th><th>استاد</th>
+            <th>ترم</th><th>ظرفیت</th>
+        </tr>
+        {% for course in courses %}
+        <tr>
+            <td>{{ course.code }}</td>
+            <td>{{ course.title }}</td>
+            <td>{{ course.units }}</td>
+            <td>{% if course.professor %}{{ course.professor.get_full_name }}{% else %}-{% endif %}</td>
+            <td>{{ course.semester }}</td>
+            <td>{{ course.taken_seats }} / {{ course.capacity }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">درسی یافت نشد.</td></tr>
+        {% endfor %}
+    </table>
+    </div>
+
+    <p style="margin-top:15px;"><a href="{% url 'add_course' %}" class="btn btn-green">+ افزودن درس</a></p>
+</div>
+{% endblock %}

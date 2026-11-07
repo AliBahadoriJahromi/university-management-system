@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}کارنامه من{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>کارنامه</h1>
+    <p>دانشجو: <b>{{ user.get_full_name|default:user.username }}</b>
+       {% if user.student_number %}(شماره {{ user.student_number }}){% endif %}</p>
+    <p>معدل کل:
+       <b style="font-size:20px;">{% if total_gpa %}{{ total_gpa }}{% else %}-{% endif %}</b></p>
+</div>
+
+{% for report in semester_reports %}
+<div class="card">
+    <h2>ترم {{ report.semester }}</h2>
+    <div class="table-wrap">
+    <table>
+        <tr><th>کد</th><th>عنوان</th><th>واحد</th><th>نمره</th><th>وضعیت</th></tr>
+        {% for e in report.items %}
+        <tr>
+            <td>{{ e.course.code }}</td>
+            <td>{{ e.course.title }}</td>
+            <td>{{ e.course.units }}</td>
+            <td>{% if e.grade is not None %}{{ e.grade }}{% else %}<i>-</i>{% endif %}</td>
+            <td>
+                {% if e.grade is None %}
+                    <span class="badge off" style="background:#888;">بدون نمره</span>
+                {% elif e.is_passed %}
+                    <span class="badge on">قبول</span>
+                {% else %}
+                    <span class="badge off">مردود</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    <p style="margin-top:10px;">معدل ترم:
+       <b>{% if report.gpa %}{{ report.gpa }}{% else %}-{% endif %}</b></p>
+</div>
+{% empty %}
+<div class="card"><p>هنوز درسی ندارید.</p></div>
+{% endfor %}
+{% endblock %}

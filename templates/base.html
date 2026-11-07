@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}سامانه آموزشی{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+{% if user.is_authenticated %}
+<div class="navbar">
+    <span class="brand">🎓 سامانه آموزشی</span>
+    <a href="{% url 'dashboard' %}">داشبورد</a>
+
+    {% if user.is_student %}
+        <a href="{% url 'course_selection' %}">انتخاب واحد</a>
+        <a href="{% url 'transcript' %}">کارنامه من</a>
+    {% endif %}
+
+    {% if user.is_manager %}
+        <a href="{% url 'course_list' %}">دروس</a>
+        <a href="{% url 'add_course' %}">افزودن درس</a>
+        <a href="{% url 'reports' %}">گزارش‌ها</a>
+        <a href="{% url 'workflows' %}">گردش کارها</a>
+        <a href="{% url 'activity_logs' %}">لاگ‌ها</a>
+    {% endif %}
+
+    <a href="{% url 'profile' %}">پروفایل</a>
+    <a href="{% url 'logout' %}">خروج ({{ user.username }})</a>
+</div>
+{% endif %}
+
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

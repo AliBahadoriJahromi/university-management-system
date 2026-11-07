@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}داشبورد مدیر گروه{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>سلام، {{ user.get_full_name|default:user.username }} 👋</h1>
+    <p>شما با نقش <b>مدیر گروه</b> وارد شده‌اید.</p>
+
+    <div class="stat-grid">
+        <div class="stat-box"><div class="number">{{ course_count }}</div><div>دروس</div></div>
+        <div class="stat-box"><div class="number">{{ student_count }}</div><div>دانشجویان</div></div>
+        <div class="stat-box"><div class="number">{{ professor_count }}</div><div>اساتید</div></div>
+        <div class="stat-box"><div class="number">{{ enrollment_count }}</div><div>انتخاب واحدها</div></div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>دسترسی سریع</h2>
+    <a href="{% url 'add_course' %}" class="btn">افزودن درس</a>
+    <a href="{% url 'course_list' %}" class="btn">همه دروس</a>
+    <a href="{% url 'reports' %}" class="btn">گزارش و جستجو</a>
+    <a href="{% url 'workflows' %}" class="btn">گردش کارها</a>
+    <a href="{% url 'activity_logs' %}" class="btn">لاگ فعالیت‌ها</a>
+</div>
+
+<div class="card">
+    <h2>گردش کارها</h2>
+    <div class="table-wrap">
+    <table>
+        <tr><th>نام</th><th>وضعیت</th></tr>
+        {% for wf in workflows %}
+        <tr>
+            <td>{{ wf.name }}</td>
+            <td>
+                {% if wf.is_active %}<span class="badge on">فعال</span>
+                {% else %}<span class="badge off">بسته</span>{% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2">هنوز گردش کاری تعریف نشده است.</td></tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+{% endblock %}

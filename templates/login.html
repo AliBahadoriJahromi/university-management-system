@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}ورود - سامانه آموزشی{% endblock %}
+
+{% block content %}
+<div class="card login-box">
+    <h1 style="text-align:center;">🎓 ورود</h1>
+    <p style="text-align:center; color:#666;">سامانه آموزشی</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label>نام کاربری</label>
+        <input type="text" name="username" required autofocus>
+
+        <label>رمز عبور</label>
+        <input type="password" name="password" required>
+
+        <button type="submit" class="btn" style="width:100%;">ورود</button>
+    </form>
+
+    <p style="font-size:13px; color:#888; margin-top:15px;">
+        حساب‌های نمونه (رمز عبور <b>1234</b>):<br>
+        manager / prof1 / student1
+    </p>
+</div>
+{% endblock %}

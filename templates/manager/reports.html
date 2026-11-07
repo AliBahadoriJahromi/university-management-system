@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}گزارش و جستجو{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>جستجوی دانشجویان</h1>
+    <form method="get" style="display:flex; gap:10px; max-width:500px;">
+        <input type="text" name="q" placeholder="نام یا شماره دانشجویی..." value="{{ query }}">
+        <button type="submit" class="btn">جستجو</button>
+    </form>
+
+    <p style="margin-top:10px;">
+        <a href="{% url 'export_students_csv' %}" class="btn btn-green">⬇ خروجی CSV دانشجویان (اکسل)</a>
+    </p>
+
+    <div class="table-wrap">
+    <table>
+        <tr><th>شماره دانشجویی</th><th>نام</th><th>نام کاربری</th><th>تعداد دروس</th><th>معدل</th></tr>
+        {% for row in student_rows %}
+        <tr>
+            <td>{{ row.student.student_number }}</td>
+            <td>{{ row.student.get_full_name }}</td>
+            <td>{{ row.student.username }}</td>
+            <td>{{ row.student.enrollments.count }}</td>
+            <td>{% if row.gpa %}{{ row.gpa }}{% else %}-{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">دانشجویی یافت نشد.</td></tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+
+<div class="card">
+    <h1>آمار دروس</h1>
+    <div class="table-wrap">
+    <table>
+        <tr><th>کد</th><th>عنوان</th><th>تعداد دانشجو</th><th>میانگین نمره</th></tr>
+        {% for course in course_stats %}
+        <tr>
+            <td>{{ course.code }}</td>
+            <td>{{ course.title }}</td>
+            <td>{{ course.num_students }}</td>
+            <td>{% if course.avg_grade %}{{ course.avg_grade|floatformat:2 }}{% else %}-{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+{% endblock %}

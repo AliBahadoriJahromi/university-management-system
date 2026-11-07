@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}داشبورد دانشجو{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>سلام، {{ user.get_full_name|default:user.username }} 👋</h1>
+    <p>شما با نقش <b>دانشجو</b> وارد شده‌اید.</p>
+
+    <div class="stat-grid">
+        <div class="stat-box">
+            <div class="number">{{ enrollments.count }}</div>
+            <div>دروس من</div>
+        </div>
+        <div class="stat-box">
+            <div class="number">{% if gpa %}{{ gpa }}{% else %}-{% endif %}</div>
+            <div>معدل کل</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>دروس فعلی من</h2>
+    {% if enrollments %}
+    <div class="table-wrap">
+    <table>
+        <tr><th>کد</th><th>عنوان</th><th>واحد</th><th>ترم</th><th>نمره</th></tr>
+        {% for e in enrollments %}
+        <tr>
+            <td>{{ e.course.code }}</td>
+            <td>{{ e.course.title }}</td>
+            <td>{{ e.course.units }}</td>
+            <td>{{ e.course.semester }}</td>
+            <td>{% if e.grade is not None %}{{ e.grade }}{% else %}<i>ثبت نشده</i>{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    {% else %}
+        <p>هنوز درسی انتخاب نکرده‌اید.</p>
+    {% endif %}
+
+    <p style="margin-top:15px;">
+        <a href="{% url 'course_selection' %}" class="btn">انتخاب واحد</a>
+        <a href="{% url 'transcript' %}" class="btn">مشاهده کارنامه</a>
+    </p>
+</div>
+{% endblock %}

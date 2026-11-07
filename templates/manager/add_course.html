@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}افزودن درس{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>افزودن درس جدید</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-green">ذخیره درس</button>
+        <a href="{% url 'course_list' %}" class="btn">انصراف</a>
+    </form>
+</div>
+{% endblock %}

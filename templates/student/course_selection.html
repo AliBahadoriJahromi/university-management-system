@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}انتخاب واحد{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>انتخاب واحد</h1>
+    {% if selection_open %}
+        <p>انتخاب واحد <b style="color:#27ae60;">باز</b> است. دروس خود را انتخاب کنید.</p>
+    {% else %}
+        <p>انتخاب واحد توسط مدیر گروه <b style="color:#c0392b;">بسته</b> شده است.</p>
+    {% endif %}
+
+    {% if semester_units %}
+    <div style="background:#f0f2fa; border-radius:8px; padding:12px; margin-top:10px;">
+        <b>واحدهای انتخابی شما در هر ترم (سقف: {{ max_units }} واحد):</b>
+        <ul style="margin:6px 0 0 0; padding-right:20px;">
+        {% for sem, units in semester_units.items %}
+            <li>ترم {{ sem }}: <b>{{ units }}</b> واحد</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="table-wrap">
+    <table>
+        <tr>
+            <th>کد</th><th>عنوان</th><th>واحد</th><th>استاد</th>
+            <th>پیش‌نیازها</th><th>ظرفیت خالی</th><th>عملیات</th>
+        </tr>
+        {% for course in courses %}
+        <tr>
+            <td>{{ course.code }}</td>
+            <td>{{ course.title }}</td>
+            <td>{{ course.units }}</td>
+            <td>{% if course.professor %}{{ course.professor.get_full_name }}{% else %}-{% endif %}</td>
+            <td>
+                {% for p in course.prerequisites.all %}{{ p.code }}{% if not forloop.last %}، {% endif %}{% empty %}-{% endfor %}
+            </td>
+            <td>{{ course.free_seats }} / {{ course.capacity }}</td>
+            <td>
+                {% if course.id in my_course_ids %}
+                    <form method="post" action="{% url 'drop' course.id %}" style="margin:0;">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" type="submit">حذف</button>
+                    </form>
+                {% elif course.is_full %}
+                    <span class="badge off">تکمیل</span>
+                {% elif selection_open %}
+                    <form method="post" action="{% url 'enroll' course.id %}" style="margin:0;">
+                        {% csrf_token %}
+                        <button class="btn btn-green" type="submit">اخذ</button>
+                    </form>
+                {% else %}
+                    <span>-</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+{% endblock %}
